@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wolfcode.crm.mapper.EmployeeMapper">
+    <resultMap id="BaseResultMap" type="cn.wolfcode.crm.domain.Employee">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="age" property="age" jdbcType="INTEGER"/>
+        <result column="admin" property="admin" jdbcType="BIT"/>
+        <result column="d_id" property="department.id"/>
+        <result column="d_name" property="department.name"/>
+        <result column="d_sn" property="department.sn"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="cn.wolfcode.crm.domain.Employee" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO employee (id, name, password, email, age, admin, dept_id)
+        VALUES (#{id}, #{name}, #{password},
+        #{email}, #{age}, #{admin}, #{department.id}
+        )
+    </insert>
+    <insert id="insertEmployeeRoleRelation">
+        INSERT INTO employee_role(employee_id, role_id) VALUES(#{emplId}, #{roleId})
+    </insert>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM employee
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteEmployeeRoleRelation">
+        DELETE FROM employee_role WHERE employee_id = #{empId}
+    </delete>
+
+
+
+    <update id="updateByPrimaryKey" parameterType="cn.wolfcode.crm.domain.Employee">
+        UPDATE employee
+        SET name = #{name},
+        email = #{email},
+        age = #{age},
+        admin = #{admin},
+        dept_id = #{department.id}
+        WHERE id = #{id}
+    </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT e.id, e.name, e.password, e.email, e.age, e.admin, e.dept_id,
+        d.name AS d_name, d.id AS d_id, d.sn AS d_sn
+        FROM employee e  LEFT OUTER JOIN department d ON e.dept_id = d.id WHERE e.id = #{id}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT e.id, e.name, e.password, e.email, e.age, e.admin, e.dept_id,
+        d.name AS d_name, d.id AS d_id, d.sn AS d_sn
+        FROM employee e  LEFT OUTER JOIN department d ON e.dept_id = d.id
+    </select>
+    <select id="selectForList" resultMap="BaseResultMap">
+        select e.id, e.name, e.password, e.email, e.age, e.admin, e.dept_id,
+        d.name as d_name, d.id as d_id, d.sn as d_sn
+        from employee e LEFT OUTER JOIN department d ON e.dept_id = d.id
+        <include refid="sql_conditions"/>
+    </select>
+
+    <!--通过用户名(name)和密码(password)查询用户-->
+    <select id="login" resultType="employee">
+        SELECT id, name, password, admin FROM employee WHERE name = #{name} AND password = #{password}
+    </select>
+
+    <!--通过员工的ID查询权限-->
+    <select id="selectPermissionsByEmployeeId" resultType="string">
+        SELECT DISTINCT expression FROM permission WHERE id IN(
+        SELECT permission_id FROM role_permission WHERE role_id IN(
+        SELECT role_id FROM employee_role WHERE employee_id = #{employeeId}))
+    </select>
+
+    <sql id="sql_conditions">
+        <where>
+            <if test="keyWord != null">
+                (e.name LIKE CONCAT("%", #{keyWord}, "%") or e.email LIKE CONCAT("%", #{keyWord}, "%"))
+            </if>
+            <if test="deptId != -1 and deptId != null">
+                AND dept_id = #{deptId}
+            </if>
+        </where>
+    </sql>
+</mapper>
