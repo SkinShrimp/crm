@@ -10,6 +10,8 @@
     <plugins>
         <!-- com.github.pagehelper为PageHelper类所在包名 -->
         <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!--出现数据不存在还在那页的情况-->
+            <property name="reasonable" value="true"></property>
         </plugin>
     </plugins>
 </configuration>

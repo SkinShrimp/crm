@@ -24,6 +24,6 @@ public class Employee extends BaseDomain {
 
     private Department department;
 
-//    private List<Role> list;
+    private List<Role> list;
 
 }

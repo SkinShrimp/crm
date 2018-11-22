@@ -4,11 +4,11 @@ package cn.wolfcode.crm.service;
 import cn.wolfcode.crm.domain.Employee;import cn.wolfcode.crm.query.EmployeeQueryObject;import com.github.pagehelper.PageInfo;import java.util.List;
 
 public interface IEmployeeService {
-    public abstract void save(Employee entry);
+    public abstract void save(Employee entry, Long[] roleIds);
 
     public abstract void delete(Long id);
 
-    public abstract void update(Employee entry);
+    public abstract void update(Employee entry, Long[] roleIds);
 
     public abstract Employee get(Long id);
 

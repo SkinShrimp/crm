@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)//该注解能够保存到运行时期
 public @interface RequiredPermission {
 
-    String value();//接受传递进来的权限的名称
+    String[] value();//接受传递进来的权限的名称
 
 }

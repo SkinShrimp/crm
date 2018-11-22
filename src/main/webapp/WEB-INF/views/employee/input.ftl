@@ -118,10 +118,7 @@
                     <div class="form-group">
                         <label for="admin" class="col-sm-2 control-label">超级管理员：</label>
                         <label class="checkbox-inline" style="margin-left: 15px;">
-                            <input type="checkbox" id="admin" name="admin" >
-<#--
-                        ${(employee.admin)!}?string('checked':'')
--->
+                            <input type="checkbox" id="admin" name="admin">
                             <script>
                                 <#if employee?? && employee.admin >
                                     $("[name=admin]").prop("checked", true);
@@ -129,44 +126,48 @@
                             </script>
                         </label>
                     </div>
-                <#--<div class="form-group" id="role">-->
-                <#--<div>-->
-                <#--<label for="role" class="control-label" style="margin-left: 60px">角色：</label>-->
-                <#--</div>-->
-                <#--<div class="row" style="margin-top: 10px">-->
-                <#--<div class="col-sm-4 col-sm-offset-1">-->
-                <#--<select multiple class="form-control allRoles" size="15">-->
-                <#--<c:forEach items="${roles}" var="role">-->
-                <#--<option value="${role.id}">${role.name}</option>-->
-                <#--</c:forEach>-->
-                <#--</select>-->
-                <#--</div>-->
+                    <div class="form-group" id="role">
+                        <div>
+                            <label for="role" class="control-label" style="margin-left: 60px">角色：</label>
+                        </div>
+                        <div class="row" style="margin-top: 10px">
+                            <div class="col-sm-4 col-sm-offset-1">
+                                <select multiple class="form-control allRoles" size="15">
+                                    <#if roles??>
+                                        <#list roles as role>
+                                                <option value="${role.id}">${role.name}</option>
+                                        </#list>
+                                    </#if>
+                                </select>
+                            </div>
 
-                <#--<div class="col-sm-2" style="margin-top: 60px;" align="center">-->
-                <#--<div>-->
-                <#--<a type="button" class="btn btn-info  " style="margin-top: 10px"-->
-                <#--onclick="moveSelected('allRoles', 'selfRoles')">&nbsp;&gt;&nbsp;</a>-->
-                <#--<br>-->
-                <#--<a type="button" class="btn btn-info " style="margin-top: 10px"-->
-                <#--onclick="moveSelected('selfRoles', 'allRoles')">&nbsp;&lt;&nbsp;</a>-->
-                <#--<br>-->
-                <#--<a type="button" class="btn btn-info " style="margin-top: 10px"-->
-                <#--onclick="moveAll('allRoles', 'selfRoles')">&gt;&gt;</a>-->
-                <#--<br>-->
-                <#--<a type="button" class="btn btn-info " style="margin-top: 10px"-->
-                <#--onclick="moveAll('selfRoles', 'allRoles')">&lt;&lt;</a>-->
-                <#--</div>-->
-                <#--</div>-->
+                            <div class="col-sm-2" style="margin-top: 60px;" align="center">
+                                <div>
+                                    <a type="button" class="btn btn-info  " style="margin-top: 10px"
+                                       onclick="moveSelected('allRoles', 'selfRoles')">&nbsp;&gt;&nbsp;</a>
+                                    <br>
+                                    <a type="button" class="btn btn-info " style="margin-top: 10px"
+                                       onclick="moveSelected('selfRoles', 'allRoles')">&nbsp;&lt;&nbsp;</a>
+                                    <br>
+                                    <a type="button" class="btn btn-info " style="margin-top: 10px"
+                                       onclick="moveAll('allRoles', 'selfRoles')">&gt;&gt;</a>
+                                    <br>
+                                    <a type="button" class="btn btn-info " style="margin-top: 10px"
+                                       onclick="moveAll('selfRoles', 'allRoles')">&lt;&lt;</a>
+                                </div>
+                            </div>
 
-                <#--<div class="col-sm-4">-->
-                <#--<select multiple class="form-control selfRoles" size="15" name="roleIds">-->
-                <#--<c:forEach items="${employee.list}" var="role">-->
-                <#--<option value="${role.id}">${role.name}</option>-->
-                <#--</c:forEach>-->
-                <#--</select>-->
-                <#--</div>-->
-                <#--</div>-->
-                <#--</div>-->
+                            <div class="col-sm-4">
+                                <select multiple class="form-control selfRoles" size="15" name="roleIds">
+                                    <#if employee?? && employee.list??>
+                                        <#list employee.list as role>
+                                            <option value="${role.id}">${role.name}</option>
+                                        </#list>
+                                    </#if>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <div class="col-sm-offset-1 col-sm-6">

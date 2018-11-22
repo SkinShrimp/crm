@@ -2,7 +2,6 @@ package cn.wolfcode.crm.service.impl;
 
 import cn.wolfcode.crm.domain.Role;
 import cn.wolfcode.crm.mapper.RoleMapper;
-import cn.wolfcode.crm.query.PageResult;
 import cn.wolfcode.crm.query.QueryObject;
 import cn.wolfcode.crm.service.IRoleService;
 import com.github.pagehelper.PageHelper;
@@ -10,7 +9,6 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -19,7 +17,13 @@ public class RoleServiceImpl implements IRoleService {
     private RoleMapper roleMapper;
 
     @Override
-    public void save(Role entry) {
+    public void save(Role entry, Long[] permissionIds) {
+        //重新角色增加权限
+        if (permissionIds != null) {
+            for (Long permissionId : permissionIds) {
+                insertRolePermission(permissionId, entry.getId());
+            }
+        }
         roleMapper.insert(entry);
     }
 
@@ -29,7 +33,13 @@ public class RoleServiceImpl implements IRoleService {
     }
 
     @Override
-    public void update(Role entry) {
+    public void update(Role entry, Long[] permissionIds) {
+        //重新角色增加权限
+        if (permissionIds != null) {
+            for (Long permissionId : permissionIds) {
+                insertRolePermission(permissionId, entry.getId());
+            }
+        }
         roleMapper.updateByPrimaryKey(entry);
     }
 

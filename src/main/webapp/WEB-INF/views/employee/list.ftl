@@ -8,21 +8,6 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#pagination").twbsPagination({
-            totalPages: ${pageInfo.pages},//总页数
-            startPage: ${qo.currentPage},//当前页
-            visiblePages: ${qo.pageSize},
-            first: '首页',
-            prev: '上一页',
-            next: '下一页',
-            last: '末页',
-            onPageClick: function (event, page) {
-                $("#currentPage").val(page);//修改表单中的页面参数
-                $("#searchForm").submit();
-            }
-        });
-
-
         //将删除按钮转化为ajax删除
         $(".btn-delete").click(function () {
             $.messager.model = {
@@ -33,12 +18,7 @@
             $.messager.confirm("温馨提示", "亲!您确定要删除当前数据么?", function () {
                 //发送ajax请求
                 $.get(url, function (data) {
-                    if (data.success) {
-                        $.messager.alert("温馨提示", "操作成功2S之后自动关闭页面!");
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 2000);
-                    }
+                    successAlert(data);
                 });
             });
         });
@@ -109,7 +89,7 @@
                             <a class="btn btn-info btn-xs" href="/employee/input.do?id=${employee.id}">
                                 <span class="glyphicon glyphicon-pencil"></span>编辑
                             </a>
-                            <a href="/employee/delete.do?id=${employee.id}" class="btn btn-danger btn-xs btn-delete">
+                            <a href="javascript:;" data-url="/employee/delete.do?id=${employee.id}" class="btn btn-danger btn-xs btn-delete">
                                 <span class="glyphicon glyphicon-trash"></span>删除
                             </a>
                         </td>
@@ -117,7 +97,7 @@
                 </#list>
             </table>
             <div style="text-align: center;">
-                <ul id="pagination" class="pagination"></ul>
+                <#include "../common/page.ftl">
             </div>
         </div>
     </div>

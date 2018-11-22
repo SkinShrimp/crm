@@ -1,10 +1,8 @@
 package cn.wolfcode.crm.service.impl;
 
 import cn.wolfcode.crm.domain.Employee;
-import cn.wolfcode.crm.domain.Role;
 import cn.wolfcode.crm.mapper.EmployeeMapper;
 import cn.wolfcode.crm.query.EmployeeQueryObject;
-import cn.wolfcode.crm.query.PageResult;
 import cn.wolfcode.crm.service.IEmployeeService;
 import cn.wolfcode.crm.util.LogicException;
 import com.github.pagehelper.PageHelper;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -23,7 +20,13 @@ public class EmployeeServiceImpl implements IEmployeeService {
     private EmployeeMapper employeeMapper;
 
     @Override
-    public void save(Employee entry) {
+    public void save(Employee entry, Long[] roleIds) {
+        //增加role角色
+        if (roleIds != null) {
+            for (Long roleId : roleIds) {
+                insertEmployeeRoleRelation(entry.getId(), roleId);
+            }
+        }
         employeeMapper.insert(entry);
     }
 
@@ -33,7 +36,13 @@ public class EmployeeServiceImpl implements IEmployeeService {
     }
 
     @Override
-    public void update(Employee entry) {
+    public void update(Employee entry, Long[] roleIds) {
+        //增加role角色
+        if (roleIds != null) {
+            for (Long roleId : roleIds) {
+                insertEmployeeRoleRelation(entry.getId(), roleId);
+            }
+        }
         employeeMapper.updateByPrimaryKey(entry);
     }
 

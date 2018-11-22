@@ -3,11 +3,11 @@ package cn.wolfcode.crm.service;
 
 
 import cn.wolfcode.crm.domain.Role;import cn.wolfcode.crm.query.QueryObject;import com.github.pagehelper.PageInfo;import java.util.List;public interface IRoleService {
-    public abstract void save(Role entry);
+    public abstract void save(Role entry, Long[] permissionIds);
 
     public abstract void delete(Long id);
 
-    public abstract void update(Role entry);
+    public abstract void update(Role entry, Long[] permissionIds);
 
     public abstract Role get(Long id);
 

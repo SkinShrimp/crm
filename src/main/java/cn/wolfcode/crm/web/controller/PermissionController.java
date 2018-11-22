@@ -1,10 +1,9 @@
 package cn.wolfcode.crm.web.controller;
 
-import cn.wolfcode.crm.domain.Department;
+import cn.wolfcode.crm.domain.Permission;
 import cn.wolfcode.crm.query.QueryObject;
-import cn.wolfcode.crm.service.IDepartmentService;
+import cn.wolfcode.crm.service.IPermissionService;
 import cn.wolfcode.crm.util.JsonResult;
-import cn.wolfcode.crm.util.RequiredPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,45 +12,52 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/department")
-public class DepartmentController {
+@RequestMapping("/permission")
+public class PermissionController {
     @Autowired
-    private IDepartmentService departmentService;
+    private IPermissionService permissionService;
 
-    @RequiredPermission({"部门列表查询", "department:list"})
     @RequestMapping("/list")
     public String list(Model model, @ModelAttribute("qo") QueryObject qo) {
-        model.addAttribute("pageInfo", departmentService.query(qo));
-        return "department/list";
+        model.addAttribute("pageInfo", permissionService.query(qo));
+        return "permission/list";
     }
 
-    @RequiredPermission({"部门删除", "department:delete"})
     @RequestMapping("/delete")
     @ResponseBody
     public JsonResult delete(Long id) {
         JsonResult json = new JsonResult();
-        departmentService.delete(id);
+
+        permissionService.delete(id);
+        //当权限删除的时候(权限与角色)关系删除
+        permissionService.deletePermissonRole(id);
         return json;
     }
     @RequestMapping("/input")
     public String input(Model model, Long id) {
         if (id != null) {
-            //查询回显数据
-            model.addAttribute("department", departmentService.get(id));
+            model.addAttribute("permission", permissionService.get(id));
         }
-        return "employee/input";
+        return "permission/input";
     }
 
-    @RequiredPermission({"部门保存或删除", "department:saveOrUpdate "})
     @RequestMapping("/saveOrUpdate")
     @ResponseBody
-    public JsonResult saveOrUpdate(Department entry) {
+    public JsonResult saveOrUpdate(Permission entry) {
         JsonResult json = new JsonResult();
         if (entry.getId() != null) {
-            departmentService.update(entry);
+            permissionService.update(entry);
         } else {
-            departmentService.save(entry);
+            permissionService.save(entry);
         }
+        return json;
+    }
+
+    @RequestMapping("/onload")
+    @ResponseBody
+    public JsonResult permissionOnload(){
+        JsonResult json = new JsonResult();
+        permissionService.onload();
         return json;
     }
 }

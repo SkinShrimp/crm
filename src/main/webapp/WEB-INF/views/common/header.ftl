@@ -7,5 +7,4 @@
 <script type="text/javascript" src="/js/jquery.twbsPagination.min.js"></script>
 <script type="text/javascript" src="/js/jquery.bootstrap.min.js"></script>
 <script type="text/javascript" src="/js/jquery.form.js"></script>
-
-、
+<script type="text/javascript" src="/js/common/common.js"></script>

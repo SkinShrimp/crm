@@ -31,7 +31,7 @@ public class EmployeeController {
      * @param qo
      * @return
      */
-    @RequiredPermission("员工查询")
+    @RequiredPermission({"员工查询", "employee:list"})
     @RequestMapping("/list")
     public String list(Model model, @ModelAttribute("qo") EmployeeQueryObject qo) {
         model.addAttribute("pageInfo", employeeService.query(qo));
@@ -40,18 +40,19 @@ public class EmployeeController {
         return "employee/list";
     }
 
-    @RequiredPermission("员工删除")
+    @RequiredPermission({"员工删除", "employee:delete"})
     @RequestMapping("/delete")
     @ResponseBody
     public JsonResult delete(Long id) {
         JsonResult json = new JsonResult();
         employeeService.delete(id);
+
         //员工删除的时候，应该删除（员工与角色）关联表中的关联信息
-//        employeeService.deleteEmployeeRoleRelation(id);
+        employeeService.deleteEmployeeRoleRelation(id);
         return json;
     }
 
-    @RequiredPermission("员工的编辑")
+    @RequiredPermission({"员工的编辑", "employee:input"})
     @RequestMapping("/input")
     public String input(Model model, Long id) {
         if (id != null) {
@@ -60,32 +61,26 @@ public class EmployeeController {
             //回显该用户所拥有的角色
         }
         //将角色加载出来
-//        model.addAttribute("roles", roleService.listAll());
+        model.addAttribute("roles", roleService.listAll());
 
         //将部门表查出，用于selected标签选择
         model.addAttribute("departments", departmentService.listAll());
         return "employee/input";
     }
 
-    @RequiredPermission("员工修改和新增")
+    @RequiredPermission({"员工修改和新增", "employee:saveOrUpdate"})
     @RequestMapping("/saveOrUpdate")
     public String saveOrUpdate(Employee entry, Long[] roleIds) {
         if (entry.getId() != null) {
-            employeeService.update(entry);
-
             //修改role角色
             //先删除原来的 员工<=>角色 关系
-//            employeeService.deleteEmployeeRoleRelation(entry.getId());
+            employeeService.deleteEmployeeRoleRelation(entry.getId());
+
+            employeeService.update(entry, roleIds);
 
         } else {
-            employeeService.save(entry);
+            employeeService.save(entry, roleIds);
         }
-//        //增加role角色
-//        if (roleIds != null) {
-//            for (Long roleId : roleIds) {
-//                employeeService.insertEmployeeRoleRelation(entry.getId(), roleId);
-//            }
-//        }
         return "redirect:/employee/list.do";
     }
 }

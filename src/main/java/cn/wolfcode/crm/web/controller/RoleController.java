@@ -2,6 +2,7 @@ package cn.wolfcode.crm.web.controller;
 
 import cn.wolfcode.crm.domain.Role;
 import cn.wolfcode.crm.query.QueryObject;
+import cn.wolfcode.crm.service.IPermissionService;
 import cn.wolfcode.crm.service.IRoleService;
 import cn.wolfcode.crm.util.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class RoleController {
     @Autowired
     private IRoleService roleService;
+    @Autowired
+    private IPermissionService permissionService;
 
     @RequestMapping("/list")
     public String list(Model model, @ModelAttribute("qo") QueryObject qo) {
@@ -30,9 +33,9 @@ public class RoleController {
         roleService.delete(id);
 
         //当角色删除的时候删除(角色与权限)的关系
-//        roleService.deleteRolePermission(id);
+        roleService.deleteRolePermission(id);
         //当角色删除的时候删除(角色与员工)的关系
-//        roleService.deleteRoleEmployee(id);
+        roleService.deleteRoleEmployee(id);
         return json;
     }
 
@@ -43,7 +46,7 @@ public class RoleController {
         }
 
         //在类表中回显permission权限
-//        model.addAttribute("permissions", permissionService.listAll());
+        model.addAttribute("permissions", permissionService.listAll());
         return "role/input";
     }
 
@@ -52,19 +55,13 @@ public class RoleController {
     public JsonResult saveOrUpdate(Role entry, Long[] permissionIds) {
         JsonResult json = new JsonResult();
         if (entry.getId() != null) {
-            roleService.update(entry);
-
             //删除原来角色对应的权限
-//            roleService.deleteRolePermission(entry.getId());
+            roleService.deleteRolePermission(entry.getId());
+
+            roleService.update(entry, permissionIds);
         } else {
-            roleService.save(entry);
+            roleService.save(entry, permissionIds);
         }
-        //重新角色增加权限
-//        if (permissionIds != null) {
-//            for (Long permissionId : permissionIds) {
-//                roleService.insertRolePermission(permissionId, entry.getId());
-//            }
-//        }
         return json;
     }
 }

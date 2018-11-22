@@ -11,6 +11,7 @@
         <result column="d_id" property="department.id"/>
         <result column="d_name" property="department.name"/>
         <result column="d_sn" property="department.sn"/>
+        <collection property="list" column="id" select="cn.wolfcode.crm.mapper.RoleMapper.selectRolesByEmployeeId" ofType="role"></collection>
     </resultMap>
 
     <insert id="insert" parameterType="cn.wolfcode.crm.domain.Employee" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
