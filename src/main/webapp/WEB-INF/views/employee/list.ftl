@@ -8,20 +8,30 @@
 
 <script type="text/javascript">
     $(function () {
-        //将删除按钮转化为ajax删除
-        $(".btn-delete").click(function () {
-            $.messager.model = {
-                ok: {text: "确定"},
-                cancel: {text: "取消"}
-            };
-            var url = $(this).data("url");
-            $.messager.confirm("温馨提示", "亲!您确定要删除当前数据么?", function () {
-                //发送ajax请求
-                $.get(url, function (data) {
+        jQuery.ajaxSettings.traditional = true;
+        deleteBtn(".btn-delete");
+
+        //批量选择
+        $("#batchCheck").click(function () {
+            $("input[name=subCheck]").prop("checked", this.checked);
+        });
+        //批量删除
+        $(".batchDelete").click(function () {
+            var size = $("input[name=subCheck]:checked").size();
+            if (size == 0) {
+                $.messager.alert("温馨提示", "请您选择删除的数据！")
+                return;
+            }
+            var idsArr = $.map($("input[name=subCheck]:checked"), function (value) {
+                return $(value).val();
+            });
+            $.messager.confirm("温馨提示", "您确定要批量删除这些数据么?", function () {
+                $.get("/employee/batchDelete.do", {ids: idsArr}, function (data) {
                     successAlert(data);
                 });
             });
         });
+
     });
 </script>
 <body>
@@ -61,11 +71,15 @@
                 </div>
                 <input type="submit" id="btn_query" class="btn btn-default" value="查询">
                 <a href="/employee/input.do" class="btn btn-success">添加</a>
+                <a role="button" class="btn btn-danger batchDelete">
+                    <span class="glyphicon glyphicon-trash"></span> 批量删除
+                </a>
             </form>
 
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
+                    <th><input type="checkbox" name="check" id="batchCheck"></th>
                     <th>序号</th>
                     <th>姓名</th>
                     <th>密码</th>
@@ -78,6 +92,7 @@
                 </thead>
                 <#list pageInfo.list as employee>
                     <tr>
+                        <td><input type="checkbox" name="subCheck" value="${employee.id}"></td>
                         <td>${employee_index + 1}</td>
                         <td>${employee.name}</td>
                         <th>${employee.password}</th>
@@ -89,7 +104,8 @@
                             <a class="btn btn-info btn-xs" href="/employee/input.do?id=${employee.id}">
                                 <span class="glyphicon glyphicon-pencil"></span>编辑
                             </a>
-                            <a href="javascript:;" data-url="/employee/delete.do?id=${employee.id}" class="btn btn-danger btn-xs btn-delete">
+                            <a href="javascript:;" data-url="/employee/delete.do?id=${employee.id}"
+                               class="btn btn-danger btn-xs btn-delete">
                                 <span class="glyphicon glyphicon-trash"></span>删除
                             </a>
                         </td>

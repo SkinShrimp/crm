@@ -1,7 +1,11 @@
 package cn.wolfcode.crm.service;
 
 
-import cn.wolfcode.crm.domain.Employee;import cn.wolfcode.crm.query.EmployeeQueryObject;import com.github.pagehelper.PageInfo;import java.util.List;
+import cn.wolfcode.crm.domain.Employee;
+import cn.wolfcode.crm.query.EmployeeQueryObject;
+import com.github.pagehelper.PageInfo;
+
+import java.util.List;
 
 public interface IEmployeeService {
     public abstract void save(Employee entry, Long[] roleIds);
@@ -21,4 +25,7 @@ public interface IEmployeeService {
     public abstract void deleteEmployeeRoleRelation(Long emplId);
 
     public abstract void insertEmployeeRoleRelation(Long emplId, Long roleId);
+
+    public abstract void batchDeleteById(Long[] ids);
 }
+

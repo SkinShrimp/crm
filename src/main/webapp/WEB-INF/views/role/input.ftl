@@ -6,14 +6,6 @@
     <#include "../common/header.ftl" >
 </head>
 <script type="text/javascript">
-    function moveSelected(src, target) {
-        $("." + target).append($("." + src + " option:selected"));
-    }
-
-    function moveAll(src, target) {
-        $("." + target).append($("." + src + " option"));
-    }
-
     $(function () {
         $("#btn_submit").click(function () {
             $(".selfPermissions option").prop("selected", true);

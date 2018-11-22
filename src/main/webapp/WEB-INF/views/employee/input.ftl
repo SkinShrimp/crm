@@ -7,6 +7,55 @@
 </head>
 <script type="text/javascript">
     $(function () {
+        $("#editForm").validate({
+            rules: {
+                name: {
+                    required: true,
+                    rangelength: [3, 10]
+                },
+                password: {
+                    required: true,
+                    rangelength: [1, 10]
+                },
+                repassword: {
+                    required: true,
+                    minlength: 3,
+                    equalTo: "#password"
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                age: {
+                    required: true,
+                    digits: true,
+                    range: [16, 65]
+                },
+            },
+            messages: {
+                name: {
+                    required: "名称不能为空",
+                    rangelength: "名称长度为1-3个字符"
+                },
+                password: {
+                    required: "密码不能为空",
+                    rangelength: "密码长度范围为1-10"
+                },
+                repassword: {
+                    required: "密码不能为空",
+                    equalTo: "密码不一致"
+                },
+                email: {
+                    required: "邮箱不能为空",
+                    email: "邮箱格式不正确"
+                },
+                age: {
+                    required: "年龄不能为空",
+                    digits: "年龄必须为整数",
+                    range: "年龄范围16-75"
+                },
+            }
+        });
         //当选中管理员角色的按钮的时候，隐藏下面的角色选择框
         var $detach;
         $("#admin").click(function () {
@@ -37,15 +86,10 @@
             $("#editForm").submit();
         });
 
-    });
 
-    function moveSelected(src, target) {
-        $("." + target).append($("." + src + " option:selected"));
-    }
+    })
+    ;
 
-    function moveAll(src, target) {
-        $("." + target).append($("." + src + " option"));
-    }
 </script>
 <body>
 
@@ -83,7 +127,8 @@
                     <div class="form-group">
                         <label for="repassword" class="col-sm-2 control-label">验证密码：</label>
                         <div class="col-sm-6">
-                            <input type="password" class="form-control" id="repassword" placeholder="再输入一遍密码">
+                            <input type="password" class="form-control" name="repassword" id="repassword"
+                                   placeholder="再输入一遍密码">
                         </div>
                     </div>
                     </#if>

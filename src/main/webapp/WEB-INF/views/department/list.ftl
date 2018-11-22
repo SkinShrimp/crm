@@ -8,20 +8,6 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#pagination").twbsPagination({
-            totalPages: ${pageInfo.pages},//总页数
-            startPage: ${qo.currentPage},//当前页
-            visiblePages: ${qo.pageSize},
-            first: '首页',
-            prev: '上一页',
-            next: '下一页',
-            last: '末页',
-            onPageClick: function (event, page) {
-                $("#currentPage").val(page);//修改表单中的页面参数
-                $("#searchForm").submit();
-            }
-        });
-
         //新增弹出模态框
         $(".btn-input").click(function () {
             //先清空模态框中的数据
@@ -48,25 +34,7 @@
             });
         });
 
-        //将删除按钮转化为ajax删除
-        $(".btn-delete").click(function () {
-            $.messager.model = {
-              ok:{text:"确定"},
-              cancel:{text:"取消"}
-            };
-            var url = $(this).data("url");
-            $.messager.confirm("温馨提示", "亲!您确定要删除当前数据么?", function () {
-                //发送ajax请求
-                $.get(url, function (data) {
-                    if (data.success) {
-                        $.messager.alert("温馨提示", "操作成功2S之后自动关闭页面!");
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 2000);
-                    }
-                });
-            });
-        });
+        deleteBtn(".btn-delete");
     });
 </script>
 <body>
@@ -118,7 +86,7 @@
                 </#list>
             </table>
             <div style="text-align: center;">
-                <ul id="pagination" class="pagination"></ul>
+                <#include "../common/page.ftl">
             </div>
         </div>
     </div>

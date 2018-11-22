@@ -52,6 +52,15 @@ public class EmployeeController {
         return json;
     }
 
+
+    @RequestMapping("/batchDelete")
+    @ResponseBody
+    public JsonResult batchDelete(Long[] ids) {
+        JsonResult json = new JsonResult();
+        employeeService.batchDeleteById(ids);
+        return json;
+    }
+
     @RequiredPermission({"员工的编辑", "employee:input"})
     @RequestMapping("/input")
     public String input(Model model, Long id) {

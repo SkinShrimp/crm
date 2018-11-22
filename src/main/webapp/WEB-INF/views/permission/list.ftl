@@ -22,24 +22,7 @@
                 });
             });
         });
-
-        //删除权限按钮
-        $(function () {
-            $(".btn-delete").click(function () {
-                //修改提示信息
-                $.messager.model = {
-                    ok: {text: "确定"},
-                    cancel: {text: "取消"}
-                };
-
-                var $url = $(".btn-delete").data("url");
-                $.messager.confirm("温馨提示!!!", "确定要删除这条权限么?", function () {
-                    $.get($url, function (data) {
-                        successAlert(data);
-                    });
-                });
-            });
-        });
+        deleteBtn(".btn-delete");
     });
 </script>
 <body>

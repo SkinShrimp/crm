@@ -97,4 +97,14 @@ public class EmployeeServiceImpl implements IEmployeeService {
     public void insertEmployeeRoleRelation(Long emplId, Long roleId) {
         employeeMapper.insertEmployeeRoleRelation(emplId, roleId);
     }
+
+    @Override
+    public void batchDeleteById(Long[] ids) {
+        employeeMapper.deleteBatchById(ids);
+        if(ids != null){
+            for (Long id : ids) {
+                deleteEmployeeRoleRelation(id);
+            }
+        }
+    }
 }
