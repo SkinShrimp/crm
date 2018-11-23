@@ -1,4 +1,4 @@
-package cn.wolfcode.crm.shiro;
+package cn.wolfcode.crm.shiro.realm;
 
 import cn.wolfcode.crm.domain.Employee;
 import cn.wolfcode.crm.service.IEmployeeService;

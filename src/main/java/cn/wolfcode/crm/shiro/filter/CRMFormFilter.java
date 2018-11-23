@@ -1,4 +1,4 @@
-package cn.wolfcode.crm.shiro;
+package cn.wolfcode.crm.shiro.filter;
 
 import cn.wolfcode.crm.util.JsonResult;
 import com.alibaba.fastjson.JSON;

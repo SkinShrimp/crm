@@ -1,4 +1,4 @@
-package cn.wolfcode.crm.shiro;
+package cn.wolfcode.crm.shiro.realm;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
