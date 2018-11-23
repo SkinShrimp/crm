@@ -73,6 +73,12 @@
         SELECT id, name, password, admin FROM employee WHERE name = #{name} AND password = #{password}
     </select>
 
+    <!--通过员工姓名查询员工-->
+    <select id="selectByUsername" resultMap="BaseResultMap">
+        SELECT id, name, password, email, age, admin, dept_id FROM employee WHERE name = #{principal}
+    </select>
+
+
     <!--通过员工的ID查询权限-->
     <select id="selectPermissionsByEmployeeId" resultType="string">
         SELECT DISTINCT expression FROM permission WHERE id IN(

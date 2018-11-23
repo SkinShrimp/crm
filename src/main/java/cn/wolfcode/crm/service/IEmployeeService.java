@@ -27,5 +27,7 @@ public interface IEmployeeService {
     public abstract void insertEmployeeRoleRelation(Long emplId, Long roleId);
 
     public abstract void batchDeleteById(Long[] ids);
+
+    public abstract Employee getByName(String principal);
 }
 

@@ -13,7 +13,7 @@
         <li>
            <p class="navbar-text text-info"></p>
         </li>
-        <li><a href="/logout">安全退出</a></li>
+        <li><a href="/logout.do">安全退出</a></li>
         <li><a href="">个人设置</a></li>
     </ul>
 </div>

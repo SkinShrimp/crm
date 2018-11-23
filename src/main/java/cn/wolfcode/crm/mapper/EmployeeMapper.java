@@ -34,4 +34,6 @@ public interface EmployeeMapper {
     public abstract List<String> selectPermissionsByEmployeeId(Long employeeId);
 
     public abstract void deleteBatchById(Long[] ids);
+
+    public abstract Employee selectByUsername(String principal);
 }

@@ -101,10 +101,15 @@ public class EmployeeServiceImpl implements IEmployeeService {
     @Override
     public void batchDeleteById(Long[] ids) {
         employeeMapper.deleteBatchById(ids);
-        if(ids != null){
+        if (ids != null) {
             for (Long id : ids) {
                 deleteEmployeeRoleRelation(id);
             }
         }
+    }
+
+    @Override
+    public Employee getByName(String principal) {
+        return employeeMapper.selectByUsername(principal);
     }
 }
