@@ -50,10 +50,12 @@
                             <a class="btn btn-info btn-xs" href="/role/input.do?id=${role.id}">
                                 <span class="glyphicon glyphicon-pencil"></span>编辑
                             </a>
+                            <@shiro.hasPermission name="employee:delete">
                             <a href="javascript:;" data-url="/role/delete.do?id=${role.id}"
                                class="btn btn-danger btn-xs btn-delete">
                                 <span class="glyphicon glyphicon-trash"></span>删除
                             </a>
+                            </@shiro.hasPermission>
                         </td>
                     </tr>
                 </#list>

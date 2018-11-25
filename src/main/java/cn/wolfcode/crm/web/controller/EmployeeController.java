@@ -6,13 +6,19 @@ import cn.wolfcode.crm.service.IDepartmentService;
 import cn.wolfcode.crm.service.IEmployeeService;
 import cn.wolfcode.crm.service.IRoleService;
 import cn.wolfcode.crm.util.JsonResult;
-import cn.wolfcode.crm.util.RequiredPermission;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/employee")
@@ -31,7 +37,7 @@ public class EmployeeController {
      * @param qo
      * @return
      */
-    @RequiredPermission({"员工查询", "employee:list"})
+    @RequiresPermissions(value = {"员工查询", "employee:list"}, logical = Logical.OR)
     @RequestMapping("/list")
     public String list(Model model, @ModelAttribute("qo") EmployeeQueryObject qo) {
         model.addAttribute("pageInfo", employeeService.query(qo));
@@ -40,7 +46,7 @@ public class EmployeeController {
         return "employee/list";
     }
 
-    @RequiredPermission({"员工删除", "employee:delete"})
+    @RequiresPermissions(value = {"员工删除", "employee:delete"}, logical = Logical.OR)
     @RequestMapping("/delete")
     @ResponseBody
     public JsonResult delete(Long id) {
@@ -61,7 +67,7 @@ public class EmployeeController {
         return json;
     }
 
-    @RequiredPermission({"员工的编辑", "employee:input"})
+    @RequiresPermissions(value = {"员工的编辑", "employee:input"}, logical = Logical.OR)
     @RequestMapping("/input")
     public String input(Model model, Long id) {
         if (id != null) {
@@ -77,7 +83,7 @@ public class EmployeeController {
         return "employee/input";
     }
 
-    @RequiredPermission({"员工修改和新增", "employee:saveOrUpdate"})
+    @RequiresPermissions(value = {"员工修改和新增", "employee:saveOrUpdate"}, logical = Logical.OR)
     @RequestMapping("/saveOrUpdate")
     public String saveOrUpdate(Employee entry, Long[] roleIds) {
         if (entry.getId() != null) {
@@ -88,7 +94,30 @@ public class EmployeeController {
             employeeService.update(entry, roleIds);
 
         } else {
-            employeeService.save(entry, roleIds);
+            employeeService.saveOrUpdate(entry, roleIds);
+        }
+        return "redirect:/employee/list.do";
+    }
+
+    @RequestMapping("/exportExcel")
+    public void exportExcel(EmployeeQueryObject qo, HttpServletResponse response) {
+        //设置下载文件的名称
+        response.setHeader("Content-Disposition", "attachment;filename=employee.xls");
+        Workbook book = employeeService.exportExcel(qo);
+        try {
+            book.write(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/importExcel")
+    public String importExcel(MultipartFile xls) {
+        //设置下载文件的名称
+        try {
+            employeeService.importExcel(xls.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return "redirect:/employee/list.do";
     }

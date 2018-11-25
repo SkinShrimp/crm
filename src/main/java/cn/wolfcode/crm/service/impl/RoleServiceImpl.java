@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class RoleServiceImpl implements IRoleService {
@@ -66,6 +67,11 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     public void deleteRoleEmployee(Long roleId) {
         roleMapper.deleteRoleEmployee(roleId);
+    }
+
+    @Override
+    public Set<String> getRolesSNByEmployeeId(Long employeeId) {
+        return roleMapper.selectRolesSNByEmployeeId(employeeId);
     }
 
     @Override

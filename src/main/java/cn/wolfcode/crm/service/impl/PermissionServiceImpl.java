@@ -4,9 +4,10 @@ import cn.wolfcode.crm.domain.Permission;
 import cn.wolfcode.crm.mapper.PermissionMapper;
 import cn.wolfcode.crm.query.QueryObject;
 import cn.wolfcode.crm.service.IPermissionService;
-import cn.wolfcode.crm.util.RequiredPermission;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class PermissionServiceImpl implements IPermissionService {
@@ -71,22 +73,30 @@ public class PermissionServiceImpl implements IPermissionService {
         Collection<Object> values = beansWithAnnotation.values();
         //3.获取Controller对象中的所有的方法
         for (Object value : values) {
-            Method[] methods = value.getClass().getDeclaredMethods();
-            for (Method method : methods) {
-                //4.判断每个方法是否有贴@RequiredPermission注解
-                if (method.isAnnotationPresent(RequiredPermission.class)) {
-                    RequiredPermission annotation = method.getAnnotation(RequiredPermission.class);
-                    String[] experssions = annotation.value();
-                    String expression = experssions[1];
-                    //贴了:生成权限信息
-                    if (list.contains(expression)) {
-                        continue;
+            System.out.println("-----------------");
+            System.out.println(AopUtils.isCglibProxy(value));
+            System.out.println(value.getClass());
+            //4、判断该对象是否CGLIB的动态代理
+            if (AopUtils.isCglibProxy(value)) {
+                System.out.println("****************");
+
+                Method[] methods = value.getClass().getSuperclass().getDeclaredMethods();
+                for (Method method : methods) {
+                    //5.判断每个方法是否有贴@RequiredPermission注解
+                    if (method.isAnnotationPresent(RequiresPermissions.class)) {
+                        RequiresPermissions annotation = method.getAnnotation(RequiresPermissions.class);
+                        String[] experssions = annotation.value();
+                        String expression = experssions[1];
+                        //贴了:生成权限信息
+                        if (list.contains(expression)) {
+                            continue;
+                        }
+                        Permission permission = new Permission();
+                        permission.setName(experssions[0]);
+                        permission.setExpression(experssions[1]);
+                        //6.将权限信息保存到数据库中
+                        permissionMapper.insert(permission);
                     }
-                    Permission permission = new Permission();
-                    permission.setName(experssions[0]);
-                    permission.setExpression(experssions[1]);
-                    //5.将权限信息保存到数据库中
-                    permissionMapper.insert(permission);
                 }
             }
         }
@@ -96,5 +106,10 @@ public class PermissionServiceImpl implements IPermissionService {
     @Override
     public void deletePermissonRole(Long permissonId) {
         permissionMapper.deletePermissonRole(permissonId);
+    }
+
+    @Override
+    public Set<String> getExpressionsByEmployeeId(Long employeeId) {
+        return permissionMapper.selectExpressionsByEmployeeId(employeeId);
     }
 }

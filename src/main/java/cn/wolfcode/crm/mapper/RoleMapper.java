@@ -5,6 +5,7 @@ import cn.wolfcode.crm.query.QueryObject;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface RoleMapper {
     int deleteByPrimaryKey(Long id);
@@ -17,9 +18,6 @@ public interface RoleMapper {
 
     int updateByPrimaryKey(Role record);
 
-    void selectRoles();
-
-
     List<Role> selectForList(QueryObject qo);
 
     void deleteRolePermission(Long roleId);
@@ -27,4 +25,6 @@ public interface RoleMapper {
     void insertRolePermission(@Param("permissionId") Long permissionId, @Param("roleId") Long roleId);
 
     void deleteRoleEmployee(Long roleId);
+
+    Set<String> selectRolesSNByEmployeeId(Long EmployeeId);
 }

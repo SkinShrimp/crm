@@ -51,4 +51,7 @@
     <select id="selectForList" resultType="role">
         SELECT id, name, sn FROM role
     </select>
+    <select id="selectRolesSNByEmployeeId" resultType="string">
+        SELECT r.sn FROM role r INNER JOIN employee_role e on r.id = e.role_id where e.employee_id = #{employeeId}
+    </select>
 </mapper>

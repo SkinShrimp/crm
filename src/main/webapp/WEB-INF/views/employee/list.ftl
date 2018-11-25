@@ -32,6 +32,24 @@
             });
         });
 
+        $(".btn-export").click(function () {
+            //提交高级查询的表单，但是action最开始是/employee/list.do
+            //而我们需要访问的/employee/exportExcel.do
+            //所以将表单修改为/employee/list.do在提交
+            //最后把action的值修改回来
+            $("#searchForm").prop("action", "/employee/exportExcel.do");
+            $("#searchForm").submit();
+            $("#searchForm").prop("action", "/employee/list.do");
+        });
+        //点击导入按钮弹出模态框
+        $(".importBtn").click(function () {
+            $("#importModal").modal("show");
+        });
+
+        $(".submitBtn").click(function () {
+            $("#editForm").submit();
+        });
+
     });
 </script>
 <body>
@@ -74,6 +92,12 @@
                 <a role="button" class="btn btn-danger batchDelete">
                     <span class="glyphicon glyphicon-trash"></span> 批量删除
                 </a>
+                <a href="javascript:;" target="_blank" class="btn btn-warning btn-export">
+                    <span class="glyphicon glyphicon-export"></span> 导出
+                </a>
+                <a role="button" class="btn btn-warning importBtn">
+                    <span class="glyphicon glyphicon-import"></span> 导入
+                </a>
             </form>
 
             <table class="table table-striped table-hover">
@@ -95,11 +119,11 @@
                         <td><input type="checkbox" name="subCheck" value="${employee.id}"></td>
                         <td>${employee_index + 1}</td>
                         <td>${employee.name}</td>
-                        <th>${employee.password}</th>
+                        <th>${(employee.password)!}</th>
                         <th>${employee.age}</th>
                         <th>${employee.email}</th>
                         <th>${(employee.admin)?string("true","fasle")}</th>
-                        <th>${employee.department.name}</th>
+                        <th>${(employee.department.name)!}</th>
                         <td>
                             <a class="btn btn-info btn-xs" href="/employee/input.do?id=${employee.id}">
                                 <span class="glyphicon glyphicon-pencil"></span>编辑
@@ -118,5 +142,44 @@
         </div>
     </div>
 </div>
+
+
+<!-- 导入员工 -->
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">导入员工</h4>
+            </div>
+            <div class="modal-body">
+                <!--填充编辑界面-->
+                <form id="editForm" class="form-horizontal" action="/employee/importExcel.do"
+                      enctype="multipart/form-data" method="post">
+                    <input type="hidden" name="id"/>
+                    <div class="form-group" >
+                        <label for="name" class="col-lg-4 control-label">上传文件：</label>
+                        <div class="col-lg-6">
+                            <input type="file" name="xls" accept="application/vnd.ms-excel" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sn" class="col-lg-4 control-label">参考模板：</label>
+                        <div class="col-lg-6">
+                            <a href="/template/employee.xls" class="btn btn-success btn-block">
+                                <span class="glyphicon glyphicon-download"></span> 下载模板
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary submitBtn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

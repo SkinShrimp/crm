@@ -24,6 +24,7 @@ function deleteBtn(btnClass) {
         });
     });
 }
+
 function moveSelected(src, target) {
     $("." + target).append($("." + src + " option:selected"));
 }

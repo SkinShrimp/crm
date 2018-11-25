@@ -2,26 +2,41 @@ package cn.wolfcode.crm.shiro.realm;
 
 import cn.wolfcode.crm.domain.Employee;
 import cn.wolfcode.crm.service.IEmployeeService;
+import cn.wolfcode.crm.service.IPermissionService;
+import cn.wolfcode.crm.service.IRoleService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
 //crm使用的是realm
 @Component("realm")//把当前类交给Spring管理id=realm
 public class CRMRealm extends AuthorizingRealm {
     @Autowired
     private IEmployeeService employeeService;
+
+    @Autowired
+    private IRoleService roleService;
+
+    @Autowired
+    private IPermissionService permissionService;
+
+    //注入加密的凭证匹配器
+    @Autowired
+    @Override
+    public void setCredentialsMatcher(CredentialsMatcher credentialsMatcher) {
+        super.setCredentialsMatcher(credentialsMatcher);
+    }
 
     /**
      * 获取真实的认证信息
@@ -43,19 +58,34 @@ public class CRMRealm extends AuthorizingRealm {
         }
         //4、返回真实的认证信息
         //注意：这里使用的员工对象最为身份存入认证信息中
-        return new SimpleAuthenticationInfo(employee, employee.getPassword(), getName());
+        return new SimpleAuthenticationInfo(employee, employee.getPassword(), ByteSource.Util.bytes(employee.getName()), getName());
     }
 
+    /**
+     * 获取真正授权信息
+     *
+     * @param principals 身份
+     * @return 授权信息
+     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        Employee currentUser = (Employee) principals.getPrimaryPrincipal();
-        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        List<String> roles = new ArrayList<String>();
-        roles.addAll(Arrays.asList("HR MGR", "ORDER MGR"));
-        authorizationInfo.addRoles(roles);
-        List<String> perms = new ArrayList<String>();
-        perms.addAll(Arrays.asList("employee:view", "employee:delete"));
-        authorizationInfo.addStringPermissions(perms);
-        return authorizationInfo;
+        //创建授权对象
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        //拿到当前的用户信息
+        Employee emp = (Employee) principals.getPrimaryPrincipal();
+        //判断是否是超管，超管的给与admin角色和所有的权限
+        if (emp.isAdmin()) {
+            info.addRole("admin");
+            info.addStringPermission("*:*");
+        } else {
+            //查询当前用户拥有的所有的角色编码
+            Set<String> roles = roleService.getRolesSNByEmployeeId(emp.getId());
+            //查询当前用户拥有的所有权限表达式
+            Set<String> expressions = permissionService.getExpressionsByEmployeeId(emp.getId());
+            info.addRoles(roles);
+            info.addStringPermissions(expressions);
+        }
+        //返回授权信息
+        return info;
     }
 }

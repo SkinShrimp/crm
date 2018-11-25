@@ -5,6 +5,7 @@ import cn.wolfcode.crm.query.QueryObject;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IPermissionService {
     public abstract void save(Permission entry);
@@ -21,5 +22,7 @@ public interface IPermissionService {
 
     public abstract void onload();
 
-    void deletePermissonRole(Long permissonId);
+    public abstract void deletePermissonRole(Long permissonId);
+
+    public abstract Set<String> getExpressionsByEmployeeId(Long employeeId);
 }

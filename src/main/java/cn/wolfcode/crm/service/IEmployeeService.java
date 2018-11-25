@@ -4,7 +4,10 @@ package cn.wolfcode.crm.service;
 import cn.wolfcode.crm.domain.Employee;
 import cn.wolfcode.crm.query.EmployeeQueryObject;
 import com.github.pagehelper.PageInfo;
+import org.apache.poi.ss.usermodel.Workbook;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public interface IEmployeeService {
@@ -29,5 +32,11 @@ public interface IEmployeeService {
     public abstract void batchDeleteById(Long[] ids);
 
     public abstract Employee getByName(String principal);
+
+    public abstract void saveOrUpdate(Employee entry, Long[] roleIds);
+
+    public abstract Workbook exportExcel(EmployeeQueryObject qo);
+
+    public abstract void importExcel(InputStream inputStream) throws IOException;
 }
 

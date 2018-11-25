@@ -1,8 +1,14 @@
 package cn.wolfcode.crm.service;
 
 
+import cn.wolfcode.crm.domain.Role;
+import cn.wolfcode.crm.query.QueryObject;
+import com.github.pagehelper.PageInfo;
 
-import cn.wolfcode.crm.domain.Role;import cn.wolfcode.crm.query.QueryObject;import com.github.pagehelper.PageInfo;import java.util.List;public interface IRoleService {
+import java.util.List;
+import java.util.Set;
+
+public interface IRoleService {
     public abstract void save(Role entry, Long[] permissionIds);
 
     public abstract void delete(Long id);
@@ -21,4 +27,6 @@ import cn.wolfcode.crm.domain.Role;import cn.wolfcode.crm.query.QueryObject;impo
     public abstract void insertRolePermission(Long permissionId, Long roleId);
 
     public abstract void deleteRoleEmployee(Long roleId);
+
+    public abstract Set<String> getRolesSNByEmployeeId(Long employeeId);
 }

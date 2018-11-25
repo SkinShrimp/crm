@@ -22,6 +22,7 @@
         <property name="filterChainDefinitions">
             <value>
                 /js/**=anon
+                /template/**=anon
                 /bootstrap/**=anon
                 /images/**=anon
                 /css/**=anon
@@ -40,5 +41,30 @@
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <!--数据Realm的来源-->
         <property name="realm" ref="realm"/>
+        <!--引入缓存管理器-->
+        <property name="cacheManager" ref="cacheManager"/>
+    </bean>
+
+
+    <!--支持加密的凭证匹配器-->
+    <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+        <!--使用MD5算法加密-->
+        <property name="hashAlgorithmName" value="md5"/>
+    </bean>
+
+
+    <!--开启shiro注解支持-->
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+
+    <!-- 缓存管理器开始 -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManager" ref="ehCacheManager"/>
+    </bean>
+    <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:shiro-ehcache.xml"/>
+        <property name="shared" value="true"/>
     </bean>
 </beans>

@@ -4,6 +4,7 @@ import cn.wolfcode.crm.domain.Permission;
 import cn.wolfcode.crm.query.QueryObject;
 
 import java.util.List;
+import java.util.Set;
 
 public interface PermissionMapper {
     public abstract int deleteByPrimaryKey(Long id);
@@ -21,4 +22,6 @@ public interface PermissionMapper {
     public abstract List<String> selectAllExpression();
 
     public abstract void deletePermissonRole(Long permissonId);
+
+    public abstract Set<String> selectExpressionsByEmployeeId(Long employeeId);
 }
