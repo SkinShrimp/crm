@@ -11,7 +11,7 @@
     <span class="pageTitle">&nbsp;</span>
     <ul class="nav navbar-nav navbar-right cm-navbar-nav ">
         <li>
-           <p class="navbar-text text-info"></p>
+           <p class="navbar-text text-info"><@shiro.principal property="name"></@shiro.principal></p>
         </li>
         <li><a href="/logout.do">安全退出</a></li>
         <li><a href="">个人设置</a></li>

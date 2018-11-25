@@ -6,7 +6,7 @@
     $(function () {
         $("#pagination").twbsPagination({
             totalPages: ${pageInfo.pages},//总页数
-            startPage: ${qo.currentPage},//当前页
+            startPage: ${pageInfo.pageNum},//当前页
             visiblePages: ${qo.pageSize},
             first: '首页',
             prev: '上一页',
