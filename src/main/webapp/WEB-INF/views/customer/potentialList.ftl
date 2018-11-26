@@ -54,7 +54,7 @@
     <#include "../common/top.ftl">
     <div class="row">
         <div class="col-sm-3">
-        <#assign currentMenu = "customer"/>
+        <#assign currentMenu = "customer_potential"/>
             <#include "../common/menu.ftl">
         </div>
         <div class="col-sm-9">

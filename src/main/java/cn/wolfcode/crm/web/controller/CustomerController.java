@@ -7,10 +7,9 @@ import cn.wolfcode.crm.service.ICustomerService;
 import cn.wolfcode.crm.service.IEmployeeService;
 import cn.wolfcode.crm.service.ISystemDictionaryItemService;
 import cn.wolfcode.crm.util.JsonResult;
-import org.apache.shiro.SecurityUtils;
+import cn.wolfcode.crm.util.UserContext;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,11 +30,11 @@ public class CustomerController {
     @RequiresPermissions(value = {"客户列表查询", "customer:list"}, logical = Logical.OR)
     @RequestMapping("/list")
     public String list(Model model, @ModelAttribute("qo") CustomerQueryObject qo) {
+        //身份验证：
         //根据用户的信息进行查询
         //如果是超管或者营销经理，查询所有
-        Subject subject = SecurityUtils.getSubject();
-        Employee emp = (Employee) subject.getPrincipal();
-        if (!emp.isAdmin() && !subject.hasRole("CLIENT_MGR")) {
+        Employee emp = UserContext.getCurrentEmp();
+        if (!UserContext.isAdminOrSaleManager()) {
             qo.setSellerId(emp.getId());
         }
 
