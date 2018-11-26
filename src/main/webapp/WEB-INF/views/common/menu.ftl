@@ -27,7 +27,7 @@
         </a>
         <ul class="in" id="customerMgr">
             <li class="customer"><a href="/customer/list.do">客户列表</a></li>
-            <li class="customer_potential"><a href="/customer/potentialList.do">潜在客户</a></li>
+            <li class="customer_potential"><a href="/customer/list.do">潜在客户</a></li>
             <li class="customer_pool"><a href="/customer/poolList.do">客户池</a></li>
             <li class="customer_fail"><a href="/customer/failList.do">失败客户</a></li>
             <li class="customerTraceHistory"><a href="/customerTraceHistory/list.do">跟进历史</a></li>

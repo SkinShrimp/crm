@@ -87,7 +87,7 @@
 			<generatedKey column="id" sqlStatement="JDBC" />
 		</table>-->
 		<!--domainObjectName:指定实体类的名称(需要加)  domainObjectName="SystemDictionary"-->
-		<table tableName="SystemDictionaryItem" domainObjectName="SystemDictionaryItem">
+		<table tableName="customer">
 <!--			<property name="useActualColumnNames" value="true"/>
 			<property name="constructorBased" value="false" />-->
 <!--

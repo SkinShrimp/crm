@@ -86,6 +86,18 @@
         SELECT role_id FROM employee_role WHERE employee_id = #{employeeId}))
     </select>
 
+    <!--查询所有的销售人员-->
+    <select id="selectEmpByRoleSn" resultType="employee">
+        SELECT e.id, e.name, e.password, e.email, e.age, e.admin
+        FROM employee e LEFT OUTER JOIN employee_role r ON e.id = r.employee_id
+        LEFT OUTER JOIN role r1 ON r.role_id = r1.id
+        WHERE r1.sn IN
+        <foreach collection="array" open="(" separator="," close=")" item="sns">
+            #{sns}
+        </foreach>
+        GROUP BY e.id
+    </select>
+
     <sql id="sql_conditions">
         <where>
             <if test="keyWord != null">

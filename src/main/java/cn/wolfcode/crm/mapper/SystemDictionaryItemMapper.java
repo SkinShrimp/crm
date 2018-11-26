@@ -19,4 +19,6 @@ public interface SystemDictionaryItemMapper {
     List<SystemDictionaryItem> selectForList(QueryObject qo);
 
     List<SystemDictionaryItem> selectByParentId(Long parentId);
+
+    List<SystemDictionaryItem> selectItemByDicSn(String dicSn);
 }

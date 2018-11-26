@@ -175,13 +175,18 @@ public class EmployeeServiceImpl implements IEmployeeService {
         HSSFWorkbook book = new HSSFWorkbook(inputStream);
         HSSFSheet sheet1 = book.getSheet("Sheet1");
         int lastRowNum = sheet1.getLastRowNum();
-        for (int i = 0; i < lastRowNum ; i++) {
+        for (int i = 0; i < lastRowNum; i++) {
             HSSFRow row = sheet1.getRow(i + 1);
             Employee e = new Employee();
             e.setName(row.getCell(0).getStringCellValue());
             e.setEmail(row.getCell(1).getStringCellValue());
-            e.setAge( Double.valueOf(row.getCell(2).getNumericCellValue()).intValue());
+            e.setAge(Double.valueOf(row.getCell(2).getNumericCellValue()).intValue());
             employeeMapper.insert(e);
         }
+    }
+
+    @Override
+    public List<Employee> ListAllSellers() {
+        return employeeMapper.selectEmpByRoleSn(new String[]{"CLIENT_MGR", "SALEMAN"});
     }
 }

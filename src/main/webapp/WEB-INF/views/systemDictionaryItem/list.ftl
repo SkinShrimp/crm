@@ -146,14 +146,18 @@
             </div>
             <div class="modal-body">
 
-                <form class="form-horizontal" action="/systemDictionaryItem/saveOrUpdate.do" method="post" id="editForm">
+                <form class="form-horizontal" action="/systemDictionaryItem/saveOrUpdate.do" method="post"
+                      id="editForm">
                     <input type="hidden" name="id" id="id">
                     <input type="hidden" name="parent.id" id="parentId">
                     <div class="form-group">
                         <label for="parentTitle" class="col-sm-4 control-label">字典目录：</label>
-                        // disabled="disabled"不会在提交这里的表单 readonly提交表单
+                    <#--
+                           disabled="disabled"不会在提交这里的表单 readonly提交表单
+                    -->
                         <div class="col-sm-6">
-                            <input disabled="disabled" type="text" class="form-control" id="parentTitle" name="parentTitle"
+                            <input disabled="disabled" type="text" class="form-control" id="parentTitle"
+                                   name="parentTitle"
                                    placeholder="请输入字典目录">
                         </div>
                     </div>

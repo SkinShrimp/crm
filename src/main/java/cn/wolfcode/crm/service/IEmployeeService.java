@@ -38,5 +38,7 @@ public interface IEmployeeService {
     public abstract Workbook exportExcel(EmployeeQueryObject qo);
 
     public abstract void importExcel(InputStream inputStream) throws IOException;
+
+    public abstract List<Employee> ListAllSellers();
 }
 

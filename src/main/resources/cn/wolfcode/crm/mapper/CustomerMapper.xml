@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wolfcode.crm.mapper.CustomerMapper" >
+  <resultMap id="BaseResultMap" type="cn.wolfcode.crm.domain.Customer" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="gender" property="gender" jdbcType="INTEGER" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="qq" property="qq" jdbcType="VARCHAR" />
+    <result column="input_time" property="inputTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+
+    <association property="job" javaType="systemDictionaryItem" columnPrefix="job_">
+      <result column="id" jdbcType="VARCHAR" property="id"/>
+      <result column="title" jdbcType="VARCHAR" property="title"/>
+    </association>
+    <association property="source" javaType="systemDictionaryItem" columnPrefix="source_">
+      <result column="id" property="id"/>
+      <result column="title" property="title"/>
+    </association>
+    <association property="seller" javaType="employee" columnPrefix="seller_">
+      <result column="id" property="id"/>
+      <result column="name" property="name"/>
+    </association>
+
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    DELETE FROM customer
+    WHERE id = #{id}
+  </delete>
+  <insert id="insert" parameterType="cn.wolfcode.crm.domain.Customer" >
+    INSERT INTO customer (name, age,
+    gender, tel, qq, job_id,
+    source_id, seller_id, input_user_id,
+    input_time, status)
+    VALUES (#{name}, #{age},
+    #{gender}, #{tel}, #{qq}, #{job.id},
+    #{source.id}, #{seller.id}, #{inputUser.id},
+    #{inputTime}, #{status})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.wolfcode.crm.domain.Customer" >
+    UPDATE customer
+    SET name = #{name},
+    age = #{age},
+    gender = #{gender},
+    tel = #{tel},
+    qq = #{qq},
+    job_id = #{job.id},
+    source_id = #{source.id},
+    seller_id = #{seller.id}
+    WHERE id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    SELECT id, name, age, gender, tel, qq, job_id, source_id, seller_id, input_user_id,
+    input_time, status
+    FROM customer
+    WHERE id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    SELECT id, name, age, gender, tel, qq, job_id, source_id, seller_id, input_user_id,
+    input_time, status
+    FROM customer
+  </select>
+
+  <!--高级查询-->
+  <select id="selectForList" resultMap="BaseResultMap">
+    SELECT
+    cust.id,
+    cust.NAME,
+    cust.age,
+    cust.gender,
+    cust.tel,
+    cust.qq,
+    sys1.id job_id,
+    sys1.title job_title,
+    sys2.id source_id,
+    sys2.title source_title,
+    emp.id seller_id,
+    emp.NAME seller_name,
+    cust.STATUS
+    FROM customer cust
+    LEFT JOIN systemdictionaryitem sys1 ON cust.job_id = sys1.id
+    LEFT JOIN systemdictionaryitem sys2 ON cust.source_id = sys2.id
+    LEFT JOIN employee emp ON cust.seller_id = emp.id
+    LEFT JOIN employee emp1 ON cust.input_user_id = emp1.id
+    <where>
+      <if test="keyWord != null">
+        (cust.name LIKE CONCAT("%", #{keyWord},"%") or cust.tel LIKE CONCAT("%", #{keyWord},"%"))
+      </if>
+      <if test="sellerId > 0">
+        seller_id = #{sellerId}
+      </if>
+    </where>
+  </select>
+</mapper>

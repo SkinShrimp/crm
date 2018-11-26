@@ -54,4 +54,14 @@ public class SystemDictionaryItemServiceImpl implements ISystemDictionaryItemSer
     public List<SystemDictionaryItem> listByParentId(Long parentId) {
         return systemDictionaryItemMapper.selectByParentId(parentId);
     }
+
+    @Override
+    public List<SystemDictionaryItem> listJobs() {
+        return systemDictionaryItemMapper.selectItemByDicSn("job");
+    }
+
+    @Override
+    public List<SystemDictionaryItem> listSources() {
+        return systemDictionaryItemMapper.selectItemByDicSn("source");
+    }
 }

@@ -21,4 +21,8 @@ public interface ISystemDictionaryItemService {
     public abstract PageInfo<SystemDictionaryItem> query(QueryObject qo);
 
     public abstract List<SystemDictionaryItem> listByParentId(Long parentId);
+
+    public abstract List<SystemDictionaryItem> listJobs();
+
+    public abstract List<SystemDictionaryItem> listSources();
 }

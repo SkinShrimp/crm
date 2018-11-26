@@ -48,6 +48,14 @@
 
   <!--通过字典目录ID查询字典明细-->
   <select id="selectByParentId" resultType="systemDictionaryItem">
-    SELECT id, parent_id, title, sequence FROM systemdictionaryitem WHERE parent_id = #{parentId}
+    SELECT s.id, s.parent_id, s.title, s.sequence, s1.id parent_id, s1.title parent_title
+    FROM systemdictionaryitem s INNER JOIN systemdictionary s1 ON s.parent_id = s1.id
+  </select>
+
+  <!--通过SystemDictionary的Sn查询对应的字典明细-->
+  <select id="selectItemByDicSn" resultType="systemDictionaryItem">
+    SELECT s.id, s.parent_id, s.title, s.sequence, s1.id parent_id, s1.title parent_title
+    FROM systemdictionaryitem s INNER JOIN systemdictionary s1 ON s.parent_id = s1.id
+    where s1.sn = #{dicSn}
   </select>
 </mapper>
