@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>叩丁狼</title>
     <#include "../common/header.ftl">
+    <script src="/js/plugins/My97DatePicker/WdatePicker.js"></script>
 </head>
 
 <script type="text/javascript">
@@ -28,7 +29,7 @@
                 $("[name='source.id']").val($json.sourceId);
                 $("[name='seller.id']").val($json.sellerId);
             }
-            $(".modal").modal("show");
+            $(".cust-modal").modal("show");
         });
 
         //提交模态框中的数据
@@ -45,7 +46,81 @@
             });
         });
 
-        deleteBtn(".btn-delete");
+        //显示跟进的模态框
+        $(".btn-trace").click(function () {
+            var $json = $(this).data("json");
+            if ($json) {
+                $("#traceForm input[name='customer.name']").val($json.name);
+                $("#traceForm [name='customer.id']").val($json.id);
+            }
+            $(".model-trace").modal("show");
+        });
+        //跟进日期插件
+        $("#traceForm input[name=traceTime]").click(function () {
+            WdatePicker({
+                readOnly: true,
+                maxDate: new Date()
+            })
+        });
+        //绑定表单json
+        $("#traceForm").ajaxForm(function (data) {
+            if (data.success) {
+                $.messager.alert("温馨提示", "操作成功,2S后自动关闭");
+                setTimeout(function () {
+                    window.location.href = "/customerTraceHistory/list.do";
+                }, 2000);
+            }
+        });
+
+        //提交表单
+        $(".traceSubmit").click(function () {
+            $("#traceForm").submit();
+        });
+
+        //transferModal
+        $(".transferBtn").click(function () {
+            console.log("------------------");
+            var $json = $(this).data("json");
+            if ($json) {
+                $("#transferForm [name='customer.id']").val($json.id);
+                $("#transferForm input[name='customer.name']").val($json.name);
+                $("#transferForm [name='oldSeller.id']").val($json.sellerId);
+                $("#transferForm [name='oldSeller.name']").val($json.sellerName);
+
+            }
+            $("#transferModal").modal("show");
+        });
+        //绑定表单json
+        $("#transferForm").ajaxForm(function (data) {
+            successAlert(data);
+        });
+
+        //提交表单
+        $(".transferSubmit").click(function () {
+            $("#transferForm").submit();
+        });
+
+
+        //statusModal
+        $(".changeStatusBtn").click(function () {
+            var $json = $(this).data("json");
+            if ($json) {
+                $("#statusForm [name=cid]").val($json.id);
+                console.log($json);
+                $("#statusForm input[name=name]").val($json.name);
+
+            }
+            $("#statusModal").modal("show");
+        });
+        //绑定表单json
+        $("#statusForm").ajaxForm(function (data) {
+            successAlert(data);
+        });
+
+        //提交表单
+        $(".statusSubmit").click(function () {
+            $("#statusForm").submit();
+        });
     });
 </script>
 <body>
@@ -124,6 +199,18 @@
                                data-json='${(customer.jsonString)!}'>
                                 <span class="glyphicon glyphicon-pencil"></span>编辑
                             </a>
+                            <a role="button" class="btn btn-primary btn-xs btn-trace"
+                               data-json='${(customer.jsonString)!}'>
+                                <span class="glyphicon glyphicon-tag"></span> 跟进
+                            </a>
+                            <a role="button" class="btn btn-success btn-xs changeStatusBtn" data-json='${(customer.jsonString)!}'>
+                                <span class="glyphicon glyphicon-plane"></span> 修改状态
+                            </a>
+                            <a role="button" class="btn btn-warning btn-xs transferBtn"
+                               data-json='${(customer.jsonString)!}'>
+                                <span class="glyphicon glyphicon-leaf"></span> 移交
+                            </a>
+
                         </td>
                     </tr>
                 </#list>
@@ -136,7 +223,7 @@
 </div>
 
 <#--模态框-->
-<div class="modal fade">
+<div class="modal fade cust-modal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -244,5 +331,170 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<#--跟进历史-->
+<div class="modal fade model-trace"
+" id="traceModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">跟进</h4>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal" action="/customerTraceHistory/saveOrUpdate.do" method="post"
+                  id="traceForm">
+            <#--新增,新增跟进历史没有ID,客户应该要有ID,不然就不知道当前是哪个客户的跟进历史-->
+                <input type="hidden" name="customer.id"/>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">客户姓名：</label>
+                    <div class="col-lg-6">
+                        <input type="text" class="form-control" readonly name="customer.name"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">跟进时间：</label>
+                    <div class="col-lg-6 ">
+                        <input type="text" class="form-control " name="traceTime"
+                               placeholder="请输入跟进时间">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">跟进记录：</label>
+                    <div class="col-lg-6">
+                        <input type="text" class="form-control" name="traceDetails"
+                               placeholder="请输入跟进记录"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">交流方式：</label>
+                    <div class="col-lg-6">
+                        <select class="form-control" name="traceType.id">
+                                <#list traceTypes as traceType>
+                                    <option value="${traceType.id}">${traceType.title}</option>
+                                </#list>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">跟进结果：</label>
+                    <div class="col-lg-6">
+                        <select class="form-control" name="traceResult">
+                            <option value="1">优</option>
+                            <option value="2">中</option>
+                            <option value="3">差</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">备注：</label>
+                    <div class="col-lg-6">
+                        <textarea type="text" class="form-control" name="remark"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary traceSubmit">保存</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        </div>
+    </div>
+</div>
+</div>
+
+<#--移交模态框-->
+<div id="transferModal" class="modal fade transferModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">客户移交</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="/customerTransferHistory/save.do" method="post" id="transferForm"
+                      style="margin: -3px 118px">
+                    <input type="hidden" name="id" id="customerTransferId"/>
+                    <div class="form-group">
+                        <label for="name" class="col-sm-4 control-label">客户姓名：</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="customer.name" readonly>
+                            <input type="hidden" class="form-control" name="customer.id">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sn" class="col-sm-4 control-label">旧营销人员：</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="oldSeller.name" readonly>
+                            <input type="hidden" class="form-control" name="oldSeller.id">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sn" class="col-sm-4 control-label">新营销人员：</label>
+                        <div class="col-sm-8">
+                            <select name="newSeller.id" id="newSeller" class="form-control">
+                                <#list sellers as e>
+                                    <option value="${e.id}">${e.name}</option>
+                                </#list>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sn" class="col-sm-4 control-label">移交原因：</label>
+                        <div class="col-sm-8">
+                            <textarea type="text" class="form-control" id="reason" name="reason" cols="10"></textarea>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary transferSubmit">保存</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<#--修改状态-->
+<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">修改客户状态</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="/customer/updateStatus.do" method="post" id="statusForm">
+                    <input type="hidden" name="cid"/>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">客户名称：</label>
+                        <div class="col-lg-6">
+                            <input type="text" class="form-control" name="name"
+                                   readonly placeholder="请输入客户名称"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">客户状态：</label>
+                        <div class="col-lg-6">
+                            <select class="form-control" name="status">
+                                <option value="1">潜在客户</option>
+                                <option value="2">移入客户池</option>
+                                <option value="3">客户流失</option>
+                                <option value="4">开发失败</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary statusSubmit">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

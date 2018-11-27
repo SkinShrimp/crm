@@ -49,6 +49,9 @@ public class CustomerController {
         //查询用户来源字典
         model.addAttribute("sources", systemDictionaryItemService.listSources());
 
+        //更进--交流方式--数据字典
+        model.addAttribute("traceTypes", systemDictionaryItemService.listTypes());
+
         return "customer/potentialList";
     }
 
@@ -80,6 +83,14 @@ public class CustomerController {
         } else {
             customerService.save(entry);
         }
+        return json;
+    }
+
+    @ResponseBody
+    @RequestMapping("/updateStatus")
+    public JsonResult updateStatus(Long cid, Long status, String name){
+        JsonResult json = new JsonResult();
+            customerService.updateStatus(cid, status);
         return json;
     }
 }

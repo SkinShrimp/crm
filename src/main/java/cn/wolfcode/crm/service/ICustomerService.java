@@ -1,6 +1,7 @@
 package cn.wolfcode.crm.service;
 
 import cn.wolfcode.crm.domain.Customer;
+import cn.wolfcode.crm.domain.Employee;
 import cn.wolfcode.crm.query.QueryObject;
 import com.github.pagehelper.PageInfo;
 
@@ -19,4 +20,8 @@ public interface ICustomerService {
 
     //角色不支持高级查询
     public abstract PageInfo<Customer> query(QueryObject qo);
+
+    public abstract void updateSellerAndStatusById(Customer customer, Employee seller);
+
+    void updateStatus(Long cid, Long status);
 }

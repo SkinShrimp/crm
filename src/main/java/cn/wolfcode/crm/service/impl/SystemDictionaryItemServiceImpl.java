@@ -64,4 +64,9 @@ public class SystemDictionaryItemServiceImpl implements ISystemDictionaryItemSer
     public List<SystemDictionaryItem> listSources() {
         return systemDictionaryItemMapper.selectItemByDicSn("source");
     }
+
+    @Override
+    public List<SystemDictionaryItem> listTypes() {
+        return systemDictionaryItemMapper.selectItemByDicSn("communicationMethod");
+    }
 }

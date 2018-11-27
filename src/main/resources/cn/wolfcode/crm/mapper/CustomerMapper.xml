@@ -51,6 +51,16 @@
     seller_id = #{seller.id}
     WHERE id = #{id}
   </update>
+
+  <update id="updateSellerAndStatusById" parameterType="customer">
+    UPDATE  customer SET seller_id = #{seller.id}, status = #{status} WHERE id = #{id}
+  </update>
+
+  <update id="updateStatusById">
+    UPDATE  customer SET status = #{status} WHERE id = #{cid}
+  </update>
+
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     SELECT id, name, age, gender, tel, qq, job_id, source_id, seller_id, input_user_id,
     input_time, status

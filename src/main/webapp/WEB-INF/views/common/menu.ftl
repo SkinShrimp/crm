@@ -31,7 +31,7 @@
             <li class="customer_pool"><a href="/customer/poolList.do">客户池</a></li>
             <li class="customer_fail"><a href="/customer/failList.do">失败客户</a></li>
             <li class="customerTraceHistory"><a href="/customerTraceHistory/list.do">跟进历史</a></li>
-            <li class="customerTransfer"><a href="/customerTransfer/list.do">移交历史</a></li>
+            <li class="customerTransferHistory"><a href="/customerTransferHistory/list.do">移交历史</a></li>
         </ul>
     </li>
     <li class="list-group-item">

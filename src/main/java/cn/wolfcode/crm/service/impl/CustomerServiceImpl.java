@@ -55,4 +55,21 @@ public class CustomerServiceImpl implements ICustomerService {
         List<Customer> list = customerMapper.selectForList(qo);
         return new PageInfo<Customer>(list);
     }
+
+    @Override
+    public void updateSellerAndStatusById(Customer customer, Employee seller) {
+        //对于更新必须新键更新语句，使用原来的语句会出现覆盖的情况
+        Customer entry = new Customer();
+        Employee emp = new Employee();
+        entry.setSeller(emp);
+        entry.getSeller().setId(seller.getId());
+        entry.setId(customer.getId());
+        entry.setStatus(Customer.STATUS_POTENTIAL);
+        customerMapper.updateSellerAndStatusById(entry);
+    }
+
+    @Override
+    public void updateStatus(Long cid, Long status) {
+        customerMapper.updateStatusById(cid, status);
+    }
 }

@@ -25,4 +25,6 @@ public interface ISystemDictionaryItemService {
     public abstract List<SystemDictionaryItem> listJobs();
 
     public abstract List<SystemDictionaryItem> listSources();
+
+    public abstract List<SystemDictionaryItem> listTypes();
 }

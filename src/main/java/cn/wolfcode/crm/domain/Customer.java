@@ -76,6 +76,7 @@ public class Customer extends BaseDomain {
         map.put("sourceId", source.getId());
         if (seller != null) {
             map.put("sellerId", seller.getId());
+            map.put("sellerName", seller.getName());
         }
         return JsonUtil.toJsonString(map);
     }
