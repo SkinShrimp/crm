@@ -10,7 +10,6 @@
 <script type="text/javascript">
     $(function () {
         $("input[name=beginDate]").click(function () {
-            console.log("===============");
             WdatePicker({
                 readOnly: true,
                 maxDate: new Date()
@@ -93,5 +92,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>

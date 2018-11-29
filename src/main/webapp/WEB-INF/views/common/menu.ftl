@@ -39,7 +39,7 @@
             <span>报表统计</span>
         </a>
         <ul class="in" >
-            <li class="customerReport"><a href="/customerReport/list.do">潜在客户报表</a></li>
+            <li class="customerReport"><a href="/chart/list.do">潜在客户报表</a></li>
         </ul>
     </li>
     <li class="list-group-item">
@@ -61,7 +61,7 @@
         <ul class="in" id="hrMgr">
             <li class="user"><a href="#">员工管理</a></li>
             <li class="region"><a href="#">招聘计划</a></li>
-            <li class="region"><a href="#">工资管理</a></li>
+            <li class="salary"><a href="/salary/list.do">工资管理</a></li>
         </ul>
     </li>
     <li class="list-group-item">

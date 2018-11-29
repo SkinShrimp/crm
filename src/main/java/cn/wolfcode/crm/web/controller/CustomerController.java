@@ -38,6 +38,7 @@ public class CustomerController {
             qo.setSellerId(emp.getId());
         }
 
+        qo.setStatus(Customer.STATUS_POTENTIAL);
         model.addAttribute("pageInfo", customerService.query(qo));
 
         //营销人员列表(高级查询)
@@ -53,6 +54,19 @@ public class CustomerController {
         model.addAttribute("traceTypes", systemDictionaryItemService.listTypes());
 
         return "customer/potentialList";
+    }
+
+    @RequestMapping("/poolList")
+    public String poolList(Model model, @ModelAttribute("qo") CustomerQueryObject qo) {
+        qo.setStatus(Customer.STATUS_POOLED);
+        model.addAttribute("pageInfo", customerService.query(qo));
+
+        //营销人员列表(高级查询)
+        model.addAttribute("sellers", employeeService.ListAllSellers());
+
+        //获取员工的信息
+        model.addAttribute("loginEmp", UserContext.getCurrentEmp());
+        return "customer/poolList";
     }
 
     @RequiresPermissions(value = {"客户删除", "customer:delete"}, logical = Logical.OR)
@@ -88,9 +102,9 @@ public class CustomerController {
 
     @ResponseBody
     @RequestMapping("/updateStatus")
-    public JsonResult updateStatus(Long cid, Long status, String name){
+    public JsonResult updateStatus(Long cid, Long status, String name) {
         JsonResult json = new JsonResult();
-            customerService.updateStatus(cid, status);
+        customerService.updateStatus(cid, status);
         return json;
     }
 }

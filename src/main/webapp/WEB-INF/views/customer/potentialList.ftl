@@ -77,7 +77,7 @@
             $("#traceForm").submit();
         });
 
-        //transferModal
+        //移交模态框
         $(".transferBtn").click(function () {
             console.log("------------------");
             var $json = $(this).data("json");
@@ -433,11 +433,7 @@
                     <div class="form-group">
                         <label for="sn" class="col-sm-4 control-label">新营销人员：</label>
                         <div class="col-sm-8">
-                            <select name="newSeller.id" id="newSeller" class="form-control">
-                                <#list sellers as e>
-                                    <option value="${e.id}">${e.name}</option>
-                                </#list>
-                            </select>
+`
                         </div>
                     </div>
                     <div class="form-group">

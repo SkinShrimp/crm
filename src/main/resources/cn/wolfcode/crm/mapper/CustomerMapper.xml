@@ -99,7 +99,10 @@
         (cust.name LIKE CONCAT("%", #{keyWord},"%") or cust.tel LIKE CONCAT("%", #{keyWord},"%"))
       </if>
       <if test="sellerId > 0">
-        seller_id = #{sellerId}
+        and seller_id = #{sellerId}
+      </if>
+      <if test="status > 0">
+        and status = #{status}
       </if>
     </where>
   </select>
