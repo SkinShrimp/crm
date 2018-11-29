@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wolfcode.crm.mapper.SalaryMapper" >
+    <resultMap id="BaseResultMap" type="cn.wolfcode.crm.domain.Salary" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="money" property="money" jdbcType="DECIMAL" />
+        <result column="year" property="year" jdbcType="INTEGER" />
+        <result column="month" property="month" jdbcType="INTEGER" />
+        <association property="emp" javaType="employee" columnPrefix="emp_">
+            <result column="id" property="id"/>
+            <result column="name" property="name"/>
+        </association>
+    </resultMap>
+    <insert id="insert" parameterType="cn.wolfcode.crm.domain.Salary" >
+        INSERT INTO salary (money, year,
+        month, emp_id)
+        VALUES ( #{money}, #{year},
+        #{month}, #{emp.id})
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="cn.wolfcode.crm.domain.Salary" >
+        UPDATE salary
+        SET money = #{money},
+        year = #{year},
+        month = #{month}
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectForList" resultMap="BaseResultMap" >
+        SELECT
+        salary.id,
+        salary.money,
+        salary. YEAR,
+        salary. MONTH,
+        emp.id emp_id,
+        emp. NAME emp_name
+        FROM
+        salary salary
+        INNER JOIN employee emp ON salary.emp_id = emp.id
+        WHERE   salary.emp_id = #{empId}
+    </select>
+</mapper>
